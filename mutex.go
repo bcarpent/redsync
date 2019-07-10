@@ -78,6 +78,22 @@ func (m *Mutex) Extend() bool {
 	return n >= m.quorum
 }
 
+// GetToken returns the random value string associated with the mutex.
+func (m *Mutex) GetToken() string {
+	return m.value
+}
+
+// IsValid returns true if the input token matches the mutex value, which
+// will change if the mutex is auto released and another client acquires
+// the lock.
+func (m *Mutex) IsValid(token string) bool {
+	if token == m.value {
+		return true
+	}
+
+	return false
+}
+
 func genValue() (string, error) {
 	b := make([]byte, 16)
 	_, err := rand.Read(b)
